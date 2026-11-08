@@ -181,6 +181,7 @@ app.get('/api/sessions/:token', asyncRoute(async (req, res) => {
     [session.id]
   );
 
+  console.info('[TraceLabs] Demo link page opened; visit recorded.');
   res.json({
     title: session.title,
     imageUrl: session.image_url,
@@ -225,6 +226,7 @@ app.post('/api/sessions/:token/location', reportLimiter, asyncRoute(async (req, 
   }
 
   // No IP address, device fingerprint or continuous location updates are stored.
+  console.info('[TraceLabs] One-time location report saved successfully.');
   res.status(201).json({ message: 'Your one-time location was shared successfully.' });
 }));
 
@@ -235,16 +237,23 @@ app.get('/api/admin/sessions', adminAuth, asyncRoute(async (req, res) => {
     `SELECT s.id, s.title, s.image_url, s.created_at, s.expires_at,
             r.latitude, r.longitude, r.accuracy_m, r.consented_at, r.received_at,
             COALESCE(v.open_count, 0)::int AS open_count,
-            v.last_opened_at, v.last_browser, v.last_platform
+            v.last_opened_at,
+            latest.browser_family AS last_browser,
+            latest.platform_family AS last_platform
      FROM sessions s
      LEFT JOIN location_reports r ON r.session_id = s.id
+     LEFT JOIN (
+       SELECT session_id, COUNT(*)::int AS open_count, MAX(opened_at) AS last_opened_at
+       FROM session_visits
+       GROUP BY session_id
+     ) v ON v.session_id = s.id
      LEFT JOIN LATERAL (
-       SELECT COUNT(*)::int AS open_count,
-              MAX(opened_at) AS last_opened_at,
-              (ARRAY_AGG(browser_family ORDER BY opened_at DESC))[1] AS last_browser,
-              (ARRAY_AGG(platform_family ORDER BY opened_at DESC))[1] AS last_platform
-       FROM session_visits WHERE session_id = s.id
-     ) v ON TRUE
+       SELECT browser_family, platform_family
+       FROM session_visits
+       WHERE session_id = s.id
+       ORDER BY opened_at DESC
+       LIMIT 1
+     ) latest ON TRUE
      ORDER BY s.created_at DESC LIMIT 100`
   );
   res.json({ sessions: result.rows });
@@ -264,15 +273,23 @@ app.get('/health', asyncRoute(async (_req, res) => {
   res.json({ status: 'ok', service: 'TraceLab API', database: 'connected' });
 }));
 
-app.use((error, _req, res, _next) => {
-  console.error(error.message);
+app.use((error, req, res, _next) => {
+  const errorId = randomUUID();
+  console.error(JSON.stringify({
+    event: 'request_error',
+    errorId,
+    method: req.method,
+    path: req.path,
+    code: error.code || null,
+    message: error.message || 'Unknown error'
+  }));
   if (error instanceof multer.MulterError) {
     const message = error.code === 'LIMIT_FILE_SIZE' ? 'Image must be 3 MB or smaller.' : 'Image upload failed.';
     return res.status(400).json({ error: message });
   }
   if (error.message?.includes('Choose a JPG')) return res.status(400).json({ error: error.message });
   if (error.message?.includes('BLOB_READ_WRITE_TOKEN')) return res.status(503).json({ error: error.message });
-  res.status(500).json({ error: 'TraceLab encountered a server error. Check the server logs.' });
+  res.status(500).json({ error: 'TraceLab encountered a server error. Check the server logs.', reference: errorId });
 });
 
 const port = Number(process.env.PORT || 3000);
