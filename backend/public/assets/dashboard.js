@@ -65,12 +65,23 @@ $('disconnectBtn').addEventListener('click', () => {
 
 $('image').addEventListener('change', () => {
   const file = $('image').files?.[0];
-  if (!file) return;
+  const preview = $('preview');
+
+  if (!file) {
+    $('uploadTitle').textContent = 'Add an image (optional)';
+    $('uploadHint').textContent = 'Skip this to create a link only · JPG, PNG or WebP · up to 3 MB';
+    preview.removeAttribute('src');
+    preview.classList.add('hidden');
+    $('shareBtn').textContent = 'Share link';
+    $('result').classList.add('hidden');
+    return;
+  }
+
   $('uploadTitle').textContent = file.name;
   $('uploadHint').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB selected`;
-  const preview = $('preview');
   preview.src = URL.createObjectURL(file);
   preview.classList.remove('hidden');
+  $('shareBtn').textContent = 'Share photo + caption link';
   $('result').classList.add('hidden');
 });
 
@@ -81,13 +92,14 @@ $('createForm').addEventListener('submit', async (event) => {
     return;
   }
   const file = $('image').files?.[0];
-  if (!file) return showStatus($('createStatus'), 'Choose an image first.', 'error');
-  if (file.size > 3 * 1024 * 1024) return showStatus($('createStatus'), 'Image must be 3 MB or smaller.', 'error');
+  if (file && file.size > 3 * 1024 * 1024) {
+    return showStatus($('createStatus'), 'Image must be 3 MB or smaller.', 'error');
+  }
 
   const form = new FormData();
   form.append('title', $('title').value.trim());
   form.append('expiryHours', $('expiry').value);
-  form.append('image', file);
+  if (file) form.append('image', file);
   $('createBtn').disabled = true;
   $('createStatus').className = 'status';
   try {
@@ -96,7 +108,10 @@ $('createForm').addEventListener('submit', async (event) => {
     $('openLink').href = data.shareUrl;
     $('resultExpiry').textContent = `Expires ${new Date(data.expiresAt).toLocaleString()}`;
     $('result').classList.remove('hidden');
-    showStatus($('createStatus'), 'Secure consent link created. Share it with your demonstration participant.', 'success');
+    $('shareBtn').textContent = file ? 'Share photo + caption link' : 'Share link';
+    showStatus($('createStatus'), file
+      ? 'Link created with your image. Share the photo and its labelled TraceLabs caption.'
+      : 'Link created. You can share it directly or create another link with an optional image.', 'success');
     $('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     try {
       await loadReports();
@@ -190,7 +205,7 @@ $('shareBtn').addEventListener('click', async () => {
       }
 
       await copyShareLink();
-      showStatus($('createStatus'), 'This browser or messaging app cannot combine a photo and consent link in one share. The link is copied: send it as a clearly labelled second message alongside the photo. The photo alone does not collect location.', 'success');
+      showStatus($('createStatus'), 'This share target cannot combine a photo and caption. The TraceLabs link has been copied so you can share it separately.', 'success');
       return;
     }
 

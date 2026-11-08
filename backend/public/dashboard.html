@@ -50,15 +50,15 @@
     <section class="workspace-grid">
       <section class="panel create-panel" aria-labelledby="create-title">
         <div class="section-heading">
-          <div><span class="step">02</span><h2 id="create-title">Create a photo + caption link</h2></div>
+          <div><span class="step">02</span><h2 id="create-title">Create a link</h2></div>
           <span class="pill">24 HOUR DEFAULT</span>
         </div>
         <form id="createForm">
           <label class="upload-zone" for="image">
             <span class="upload-icon">↥</span>
-            <strong id="uploadTitle">Choose a demonstration image</strong>
-            <small id="uploadHint">JPG, PNG or WebP · maximum 3 MB</small>
-            <input id="image" type="file" accept="image/jpeg,image/png,image/webp" required>
+            <strong id="uploadTitle">Add an image (optional)</strong>
+            <small id="uploadHint">Skip this to create a link only · JPG, PNG or WebP · up to 3 MB</small>
+            <input id="image" type="file" accept="image/jpeg,image/png,image/webp">
           </label>
           <img id="preview" class="preview hidden" alt="Selected image preview">
           <details class="advanced-options">
@@ -68,8 +68,8 @@
               <label>Link expiry<select id="expiry"><option value="1">1 hour</option><option value="24" selected>24 hours</option><option value="72">3 days</option><option value="168">7 days</option></select></label>
             </div>
           </details>
-          <p class="form-note">Your image is re-encoded on upload to remove embedded EXIF/GPS metadata.</p>
-          <button id="createBtn" class="btn btn-primary" type="submit">Generate secure link <span>↗</span></button>
+          <p class="form-note">Images are optional. Any selected image is re-encoded to remove embedded EXIF/GPS metadata.</p>
+          <button id="createBtn" class="btn btn-primary" type="submit">Generate link <span>↗</span></button>
           <div id="createStatus" class="status" role="status" aria-live="polite"></div>
         </form>
         <section id="result" class="result-card hidden" aria-live="polite">
@@ -79,9 +79,9 @@
             <input id="shareUrl" readonly aria-label="Share link">
             <button id="copyBtn" class="btn btn-secondary" type="button">Copy link</button>
           </div>
-          <p class="share-safety-note">On supported phones, the selected photo and its TraceLabs caption link are sent together. The caption explains that opening the link records the visit time and coarse browser/device category; GPS is only shared after explicit agreement.</p>
+          <p class="share-safety-note">Share the link by itself, or attach an optional cleaned photo with its caption. Opening the link records the visit time and broad browser/device category; location is sent only after the recipient chooses to share it.</p>
           <div class="result-actions">
-            <button id="shareBtn" class="btn btn-primary" type="button">Share photo + caption link</button>
+            <button id="shareBtn" class="btn btn-primary" type="button">Share link</button>
             <a id="openLink" class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer">Preview recipient page ↗</a>
           </div>
         </section>
