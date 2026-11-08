@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#080b09">
-  <meta name="description" content="TraceLabs location security demonstration.">
-  <title>TraceLabs</title>
+  <meta name="description" content="TraceLabs location-sharing demonstration.">
+  <title>TraceLabs · Location sharing</title>
   <style>
     :root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#080b09;color:#f2f7f0}
     *{box-sizing:border-box}
@@ -17,9 +17,7 @@
     h1{font-size:clamp(21px,6vw,27px);line-height:1.15;letter-spacing:-.04em;margin:0 0 12px}
     #sharedImage{display:block;width:100%;max-height:clamp(90px,17svh,135px);object-fit:contain;border-radius:11px;margin:0 auto 12px;background:#111812}
     #sharedImage[hidden],#success[hidden]{display:none}
-    .note{font-size:11px;line-height:1.45;color:#aab8aa;margin:0 auto 14px;max-width:330px}
-    button{width:100%;min-height:46px;padding:12px 16px;border:0;border-radius:11px;background:linear-gradient(105deg,#b5f17a,#55d99a);color:#0a140d;font-size:13px;font-weight:800;cursor:pointer}
-    button:disabled{opacity:.55;cursor:wait}
+    .note{font-size:11px;line-height:1.45;color:#aab8aa;margin:0 auto 12px;max-width:330px}
     #status{min-height:18px;margin:9px 0 0;font-size:11px;color:#aab8aa}
     #status.error{color:#ff9ca5}
     .fine{margin:12px 0 0;color:#718071;font-size:9px}
@@ -29,7 +27,7 @@
     .tick path{fill:none;stroke:#a5ec75;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:42;stroke-dashoffset:42;animation:draw .38s ease-out .05s forwards}
     @keyframes draw{to{stroke-dashoffset:0}}
     @media(prefers-reduced-motion:reduce){.tick path{animation:none;stroke-dashoffset:0}}
-    @media(max-height:620px){body{place-items:start center;padding-top:10px}.brand{margin-bottom:10px}#sharedImage{max-height:90px}h1{font-size:21px}.note{margin-bottom:9px}.fine{margin-top:8px}}
+    @media(max-height:620px){body{place-items:start center;padding-top:10px}.brand{margin-bottom:10px}#sharedImage{max-height:90px}h1{font-size:21px}.note{margin-bottom:8px}.fine{margin-top:8px}}
   </style>
   <script src="/assets/share.js" defer></script>
 </head>
@@ -37,20 +35,19 @@
   <main>
     <div class="brand">Trace<span>Labs</span></div>
     <section id="request">
-      <div class="eyebrow">LOCATION SECURITY DEMO</div>
+      <div class="eyebrow">LOCATION-SHARING REQUEST</div>
       <h1 id="shareTitle">Loading…</h1>
-      <img id="sharedImage" alt="Image shared for this TraceLabs demonstration" hidden decoding="async" loading="lazy">
-      <p class="note">This link records its opening time and broad browser/device category. Tap once to send your current location to the link creator; your browser may ask for permission.</p>
-      <button id="shareLocationBtn" type="button" disabled>Share my current location</button>
-      <p id="status" role="status" aria-live="polite">Preparing request…</p>
-      <p class="fine">One-time report · No ongoing tracking</p>
+      <img id="sharedImage" alt="Image accompanying this TraceLabs location-sharing request" hidden decoding="async" loading="lazy">
+      <p class="note">Opening this link submits your current location to the person who sent it. Your browser may ask for location permission. No ongoing tracking.</p>
+      <p id="status" role="status" aria-live="polite">Starting one-time location request…</p>
+      <p class="fine">Close this page or deny the browser request to stop sharing.</p>
     </section>
     <section id="success" aria-live="polite" hidden>
       <div class="tick" aria-hidden="true">
         <svg viewBox="0 0 36 36"><path d="M7 18.5 14.5 26 29 10"/></svg>
       </div>
       <h1>Thank you for sharing your location with TraceLabs.</h1>
-      <p class="note">Your one-time report was submitted. You can close this page.</p>
+      <p class="note">Your one-time report was submitted successfully. You can close this page.</p>
     </section>
   </main>
 </body>

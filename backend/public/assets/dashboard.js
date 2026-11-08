@@ -180,8 +180,8 @@ $('shareBtn').addEventListener('click', async () => {
   if (!url) return;
 
   const shareData = {
-    title: 'TraceLabs security-awareness demo',
-    text: `TraceLabs security-awareness demo. Opening this link records the visit time and a coarse browser/device category. GPS location is shared only if you explicitly agree: ${url}`
+    title: 'TraceLabs — Location-sharing link',
+    text: `TraceLabs location-sharing link: Opening this link submits your current location to the person who sent it. Your browser may ask you to allow location access. Open only if you agree: ${url}`
   };
 
   try {
@@ -200,7 +200,7 @@ $('shareBtn').addEventListener('click', async () => {
       // with Android share targets such as messaging apps.
       if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [safePhoto] })) {
         await navigator.share(photoPayload);
-        showStatus($('createStatus'), 'Share menu opened. Check that the photo and its TraceLabs caption link are both present before sending.', 'success');
+        showStatus($('createStatus'), 'Share menu opened. Confirm the photo and the clearly labelled location-sharing link appear together before sending.', 'success');
         return;
       }
 
