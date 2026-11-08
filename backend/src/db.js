@@ -3,13 +3,19 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is required. Copy backend/.env.example to backend/.env and start PostgreSQL.');
+// Neon’s Vercel Marketplace integration commonly provides POSTGRES_URL.
+// Keep DATABASE_URL as the preferred override for existing deployments/local use.
+const databaseUrl = process.env.DATABASE_URL
+  || process.env.POSTGRES_URL
+  || process.env.POSTGRES_URL_NON_POOLING;
+
+if (!databaseUrl) {
+  throw new Error('A PostgreSQL connection is required. Connect Neon to Vercel or set DATABASE_URL.');
 }
 
-const isRemote = /neon\.tech|vercel-storage|sslmode=require/i.test(process.env.DATABASE_URL);
+const isRemote = /neon\.tech|vercel-storage|sslmode=require/i.test(databaseUrl);
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
   max: process.env.VERCEL ? 3 : 10,
   idleTimeoutMillis: 10_000,
   connectionTimeoutMillis: 10_000,
