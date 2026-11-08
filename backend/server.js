@@ -211,7 +211,11 @@ app.delete('/api/admin/sessions/:id', adminAuth, asyncRoute(async (req, res) => 
   res.json({ message: 'Session and associated report deleted.' });
 }));
 
-app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'TraceLab API' }));
+app.get('/health', asyncRoute(async (_req, res) => {
+  await ensureSchema();
+  await pool.query('SELECT 1');
+  res.json({ status: 'ok', service: 'TraceLab API', database: 'connected' });
+}));
 
 app.use((error, _req, res, _next) => {
   console.error(error.message);
