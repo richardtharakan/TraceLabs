@@ -166,38 +166,40 @@ $('shareBtn').addEventListener('click', async () => {
 
   const shareData = {
     title: 'TraceLabs consent-based location demo',
-    text: 'This photo is being shared with a clearly labelled TraceLabs location-consent request. Open the accompanying request to review it. No location is shared unless you choose to consent and approve your browser permission.',
+    text: 'TraceLabs security-awareness exercise: review this location-sharing request and decide whether you consent. The photo alone does not collect or send location.',
     url
   };
 
   try {
     if (!navigator.share) {
       await copyShareLink();
-      showStatus($('createStatus'), 'Consent link copied. Share the selected photo separately and clearly identify the TraceLabs consent request.', 'success');
+      showStatus($('createStatus'), 'This browser cannot open the native share menu. The consent link is copied; share the selected photo and this clearly labelled link separately.', 'success');
       return;
     }
 
     const selectedPhoto = $('image').files?.[0];
-    if (selectedPhoto && typeof navigator.canShare === 'function') {
-      try {
-        const safePhoto = await createSanitizedPhotoAttachment(selectedPhoto);
-        const photoPayload = { ...shareData, files: [safePhoto] };
-        if (navigator.canShare({ files: [safePhoto] })) {
-          await navigator.share(photoPayload);
-          showStatus($('createStatus'), 'Photo attachment and clearly labelled consent request shared.', 'success');
-          return;
-        }
-      } catch (photoError) {
-        // If photo attachment sharing is unsupported, continue with the
-        // clearly labelled consent link. Never share the unsanitized original.
+    if (selectedPhoto) {
+      const safePhoto = await createSanitizedPhotoAttachment(selectedPhoto);
+      const photoPayload = { ...shareData, files: [safePhoto] };
+
+      // Test the complete payload, not just the file. Some share targets
+      // accept image attachments but silently discard accompanying URLs.
+      if (typeof navigator.canShare === 'function' && navigator.canShare(photoPayload)) {
+        await navigator.share(photoPayload);
+        showStatus($('createStatus'), 'Share menu opened. Before sending, verify that both the photo and the TraceLabs consent link appear in the message. Opening the photo alone does not submit a location.', 'success');
+        return;
       }
+
+      await copyShareLink();
+      showStatus($('createStatus'), 'This browser or messaging app cannot combine a photo and consent link in one share. The link is copied: send it as a clearly labelled second message alongside the photo. The photo alone does not collect location.', 'success');
+      return;
     }
 
     await navigator.share(shareData);
-    showStatus($('createStatus'), 'Consent invitation shared. This browser did not support attaching the photo in the share sheet.', 'success');
+    showStatus($('createStatus'), 'Consent invitation shared. The recipient must open the clearly labelled request and choose whether to consent.', 'success');
   } catch (error) {
     if (error.name !== 'AbortError') {
-      showStatus($('createStatus'), error.message || 'Could not open the share sheet.', 'error');
+      showStatus($('createStatus'), error.message || 'Could not prepare the share. You can copy the consent link instead.', 'error');
     }
   }
 });
