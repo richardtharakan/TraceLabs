@@ -40,3 +40,13 @@ input:focus,select:focus{border-color:#a8f078;box-shadow:0 0 0 3px #a8f07820}
 .upload-zone{border-color:#9ce47a70;background:#0b130d}
 .upload-icon{background:#a8ed7020;color:#c0f39b}
 @media(max-width:560px){.advanced-grid{grid-template-columns:1fr}.recipient-flow{grid-template-columns:1fr}.recipient-flow>div{display:grid;grid-template-columns:26px 1fr;column-gap:8px;align-items:center}.recipient-flow>div>span{grid-row:span 2;margin:0}.result-actions{display:grid;grid-template-columns:1fr}.connected-notice{align-items:flex-start;flex-direction:column}}
+
+
+/* Compact, transparent recipient consent card */
+.share-card .privacy-points{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:13px 0 16px}
+.share-card .privacy-points div{padding:9px 8px;border:1px solid var(--line);border-radius:9px;background:#0b130d;font-size:9px;line-height:1.4}
+.share-card .privacy-points span{color:#9be66d;margin-right:5px}
+.share-card .consent-check{background:#0c140f;border-color:#83e65d36}
+.share-card>.btn-primary{background:linear-gradient(105deg,#b5f17a,#55d99a);color:#0a140d}
+.share-card .btn-ghost{background:transparent}
+@media(max-width:520px){.share-card .privacy-points{grid-template-columns:1fr}.share-card .privacy-points div{padding:8px 10px}}
