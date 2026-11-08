@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#080b09">
-  <meta name="description" content="Review a TraceLabs location-sharing request and decide whether to consent.">
+  <meta name="description" content="TraceLabs location security demonstration.">
   <link rel="icon" type="image/png" href="/favicon.png">
   <title>TraceLabs · Location request</title>
   <link rel="stylesheet" href="/assets/styles.css">
@@ -18,34 +18,24 @@
         <img class="brand-mark-image" src="/assets/brand/tracelab-mark.png" alt="">
         <span>Trace<span class="brand-light">Labs</span><small>LOCATION SECURITY DEMO</small></span>
       </a>
-      <span class="top-pill"><i></i> YOUR CHOICE</span>
+      <span class="top-pill"><i></i> LOCATION REQUEST</span>
     </header>
 
     <section class="share-card panel">
-      <div class="eyebrow">TRANSPARENT LOCATION REQUEST</div>
+      <div class="eyebrow">TRACELABS SECURITY DEMONSTRATION</div>
       <h1 id="shareTitle">Loading demonstration…</h1>
       <img id="sharedImage" class="shared-image hidden" alt="Image selected by the link creator">
       <div id="noImage" class="no-image">TraceLabs demonstration</div>
 
       <div class="notice-box">
-        <strong>What happens when you open this link?</strong>
-        <p>TraceLabs records the page-open time and a coarse browser/device category for this security demo. The application does not store your IP address or full browser identifier; the hosting provider may process connection data to deliver and secure the page. Your GPS coordinates and accuracy are sent to the link creator only if you explicitly agree below and approve your browser's location request.</p>
+        <strong>Location sharing</strong>
+        <p>Opening this page records the visit time and a broad browser/device category. Tapping the button sends your current coordinates and accuracy to the link creator. Your browser may use an existing permission or ask you to allow access.</p>
       </div>
 
-      <div class="privacy-points">
-        <div><span>✓</span> One-time report only</div>
-        <div><span>✓</span> No background tracking</div>
-        <div><span>✓</span> Nothing sent if you decline</div>
-      </div>
-
-      <label class="consent-check">
-        <input id="consent" type="checkbox">
-        <span>I understand and agree to share my current location with the TraceLabs link creator.</span>
-      </label>
-      <button id="shareLocationBtn" class="btn btn-primary" type="button" disabled>Agree & share my location <span>↗</span></button>
-      <button id="declineBtn" class="btn btn-ghost full-width" type="button">Decline — no location will be shared</button>
-      <div id="shareStatus" class="status" role="status" aria-live="polite">Your location has not been requested.</div>
-      <p class="small-print">This is a security-awareness demonstration. You may close this page at any time.</p>
+      <p id="permissionHint" class="small-print">Checking this browser's location permission…</p>
+      <button id="shareLocationBtn" class="btn btn-primary" type="button">Share my current location <span>↗</span></button>
+      <div id="shareStatus" class="status" role="status" aria-live="polite">Nothing has been shared. Continue only if you choose to.</div>
+      <p class="small-print">One-time location report. No ongoing tracking.</p>
     </section>
     <footer>TraceLabs · Open-source location security awareness</footer>
   </main>
