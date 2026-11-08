@@ -221,3 +221,7 @@ async function loadReports() {
     list.append(item);
   }
 }
+
+
+// Start locked; the administrator must authenticate before creating links or viewing reports.
+setConnectionState(false);
