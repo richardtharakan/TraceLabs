@@ -3,29 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b1220">
-  <title>TraceLab · Location sharing request</title>
+  <meta name="theme-color" content="#080b09">
+  <meta name="description" content="Review a TraceLabs location-sharing request and decide whether to consent.">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>TraceLabs · Location request</title>
   <link rel="stylesheet" href="/assets/styles.css">
   <script src="/assets/share.js" defer></script>
 </head>
 <body class="share-body">
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <main class="share-shell">
-    <header class="topbar"><a class="brand" href="/"><span class="brand-mark">T</span><span>Trace<span class="brand-light">Lab</span><small>LOCATION SECURITY DEMO</small></span></a><span class="top-pill"><i></i> EXPLICIT CONSENT</span></header>
+    <header class="topbar">
+      <a class="brand" href="/">
+        <img class="brand-mark-image" src="/assets/brand/tracelab-mark.png" alt="">
+        <span>Trace<span class="brand-light">Labs</span><small>LOCATION SECURITY DEMO</small></span>
+      </a>
+      <span class="top-pill"><i></i> YOUR CHOICE</span>
+    </header>
+
     <section class="share-card panel">
-      <div class="eyebrow">A TRANSPARENT LOCATION REQUEST</div>
+      <div class="eyebrow">TRANSPARENT LOCATION REQUEST</div>
       <h1 id="shareTitle">Loading demonstration…</h1>
       <img id="sharedImage" class="shared-image hidden" alt="Image selected by the link creator">
-      <div id="noImage" class="no-image">TraceLab demonstration</div>
-      <div class="notice-box"><strong>What will be shared?</strong><p>Your browser may share your device's current latitude, longitude and location accuracy with the person who created this link. Your browser will ask for location permission after you choose to continue.</p></div>
-      <div class="privacy-points"><div><span>01</span> One-time location report</div><div><span>02</span> No background or continuous tracking</div><div><span>03</span> No report is sent if you decline</div></div>
-      <label class="consent-check"><input id="consent" type="checkbox"><span>I understand and agree to share my current location with the TraceLab link creator.</span></label>
-      <button id="shareLocationBtn" class="btn btn-primary" type="button" disabled>Share my location <span>↗</span></button>
-      <button id="declineBtn" class="btn btn-ghost full-width" type="button">No thanks — leave this page</button>
+      <div id="noImage" class="no-image">TraceLabs demonstration</div>
+
+      <div class="notice-box">
+        <strong>What may be shared?</strong>
+        <p>Your device's current latitude, longitude and location accuracy will be sent to the person who created this link. Your browser asks for location permission only after you agree below and continue.</p>
+      </div>
+
+      <div class="privacy-points">
+        <div><span>✓</span> One-time report only</div>
+        <div><span>✓</span> No background tracking</div>
+        <div><span>✓</span> Nothing sent if you decline</div>
+      </div>
+
+      <label class="consent-check">
+        <input id="consent" type="checkbox">
+        <span>I understand and agree to share my current location with the TraceLabs link creator.</span>
+      </label>
+      <button id="shareLocationBtn" class="btn btn-primary" type="button" disabled>Agree & share my location <span>↗</span></button>
+      <button id="declineBtn" class="btn btn-ghost full-width" type="button">Decline — no location will be shared</button>
       <div id="shareStatus" class="status" role="status" aria-live="polite">Your location has not been requested.</div>
-      <p class="small-print">TraceLab is a security-awareness demonstration. Location access is requested only after your explicit action. You can close this page at any time.</p>
+      <p class="small-print">This is a security-awareness demonstration. You may close this page at any time.</p>
     </section>
-    <footer>TraceLab · Open-source location security awareness</footer>
+    <footer>TraceLabs · Open-source location security awareness</footer>
   </main>
 </body>
 </html>
