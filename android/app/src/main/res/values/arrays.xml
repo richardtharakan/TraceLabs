@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="expiry_options">
+        <item>1 hour</item>
+        <item>24 hours</item>
+        <item>3 days</item>
+        <item>7 days</item>
+    </string-array>
+</resources>

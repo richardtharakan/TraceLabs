@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+.env
+**/.env
+**/node_modules/
+**/build/
+**/.gradle/
+android/local.properties
+backend/uploads/
+*.jks
+*.keystore

@@ -1,0 +1,26 @@
+{
+  "name": "tracelab-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "type": "module",
+  "description": "TraceLab consent-based location security demonstration backend",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:init": "node src/init-db.js",
+    "check": "node --check server.js && node --check index.js && node --check src/db.js && node --check src/storage.js && node --check src/init-db.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "^1.1.1",
+    "express": "^4.21.2",
+    "dotenv": "^16.4.7",
+    "express-basic-auth": "^1.2.1",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "multer": "^2.0.0",
+    "pg": "^8.13.3",
+    "sharp": "^0.33.5"
+  }
+}

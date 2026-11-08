@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Small bootstrap wrapper for this starter. Downloads the pinned Gradle distribution once.
+set -euo pipefail
+VERSION="8.11.1"
+GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/.gradle}"
+ROOT="$GRADLE_USER_HOME/tracelab-distributions"
+HOME_DIR="$ROOT/gradle-$VERSION"
+ZIP="$ROOT/gradle-$VERSION-bin.zip"
+if [[ ! -x "$HOME_DIR/bin/gradle" ]]; then
+  mkdir -p "$ROOT"
+  if [[ ! -f "$ZIP" ]]; then
+    command -v curl >/dev/null 2>&1 || { echo "curl is required to download Gradle." >&2; exit 1; }
+    curl -fL "https://services.gradle.org/distributions/gradle-$VERSION-bin.zip" -o "$ZIP"
+  fi
+  command -v unzip >/dev/null 2>&1 || { echo "unzip is required to unpack Gradle." >&2; exit 1; }
+  unzip -q -o "$ZIP" -d "$ROOT"
+fi
+exec "$HOME_DIR/bin/gradle" "$@"

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>TraceLab · Dashboard</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/dashboard.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/dashboard"><span class="brand-mark">T</span><span>Trace<span class="brand-light">Lab</span><small>LOCATION SECURITY DEMO</small></span></a>
+      <span class="top-pill"><i></i> CONSENT MODE ENABLED</span>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">OPEN-SOURCE SECURITY AWARENESS</div>
+      <h1>Understand the <span>location-sharing</span> moment.</h1>
+      <p>Create a time-limited demonstration link. Recipients see your selected image and choose whether to share a one-time location report.</p>
+    </section>
+
+    <section class="auth-card panel" aria-labelledby="auth-title">
+      <div class="section-heading"><div><span class="step">01</span><h2 id="auth-title">Connect to your TraceLab server</h2></div><span class="secure-label">PRIVATE CONSOLE</span></div>
+      <p class="muted">Use the administrator credentials configured on your own server. They are kept in this page's memory only.</p>
+      <div class="auth-grid">
+        <label>Admin username<input id="username" autocomplete="username" placeholder="tracelab-admin"></label>
+        <label>Admin password<input id="password" type="password" autocomplete="current-password" placeholder="Your server password"></label>
+      </div>
+      <div class="row-actions"><button id="connectBtn" class="btn btn-secondary">Connect dashboard</button><span id="authStatus" class="inline-status" role="status">Not connected</span></div>
+    </section>
+
+    <section class="workspace-grid">
+      <section class="panel create-panel" aria-labelledby="create-title">
+        <div class="section-heading"><div><span class="step">02</span><h2 id="create-title">Create a share link</h2></div><span class="pill">24 HOUR DEFAULT</span></div>
+        <form id="createForm">
+          <label>Demonstration title<input id="title" maxlength="100" value="TraceLab location demo" required></label>
+          <label class="upload-zone" for="image">
+            <span class="upload-icon">↥</span><strong id="uploadTitle">Choose a photograph</strong>
+            <small id="uploadHint">JPG, PNG or WebP · maximum 3 MB</small>
+            <input id="image" type="file" accept="image/jpeg,image/png,image/webp" required>
+          </label>
+          <img id="preview" class="preview hidden" alt="Selected image preview">
+          <label>Link expiry<select id="expiry"><option value="1">1 hour</option><option value="24" selected>24 hours</option><option value="72">3 days</option><option value="168">7 days</option></select></label>
+          <button id="createBtn" class="btn btn-primary" type="submit">Generate consent link <span>↗</span></button>
+          <div id="createStatus" class="status" role="status" aria-live="polite"></div>
+        </form>
+        <section id="result" class="result-card hidden" aria-live="polite">
+          <div class="result-check">✓</div><div><strong>Link generated</strong><p id="resultExpiry" class="muted"></p></div>
+          <div class="copy-row"><input id="shareUrl" readonly aria-label="Share link"><button id="copyBtn" class="btn btn-secondary" type="button">Copy</button></div>
+          <a id="openLink" class="text-link" href="#" target="_blank" rel="noopener">Open recipient view ↗</a>
+        </section>
+      </section>
+
+      <section class="panel explanation-panel">
+        <div class="section-heading"><div><span class="step">03</span><h2>What the recipient sees</h2></div></div>
+        <div class="recipient-preview">
+          <div class="preview-browser"><span></span><span></span><span></span><small>TraceLab secure share</small></div>
+          <div class="preview-content">
+            <div class="preview-image">PHOTO PREVIEW</div>
+            <div class="preview-tag">LOCATION SHARING REQUEST</div>
+            <h3>Share a one-time location?</h3>
+            <p>The page explains what will be sent and who will receive it.</p>
+            <div class="preview-consent">□ I agree to share my current location with the link creator.</div>
+            <div class="preview-button">Share my location</div>
+            <small>Nothing is requested until the recipient taps the button.</small>
+          </div>
+        </div>
+        <ul class="assurance-list">
+          <li><span>✓</span> No automatic location prompt on page load</li>
+          <li><span>✓</span> One-time report only; no background tracking</li>
+          <li><span>✓</span> Image EXIF/GPS metadata stripped on upload</li>
+          <li><span>✓</span> Reports visible only to dashboard admins</li>
+        </ul>
+      </section>
+    </section>
+
+    <section class="panel reports-panel">
+      <div class="section-heading"><div><span class="step">04</span><h2>Demonstration sessions</h2></div><button id="refreshBtn" class="btn btn-ghost" type="button">↻ Refresh</button></div>
+      <div id="reportsState" class="empty-state">Connect with your administrator credentials to view sessions and consented reports.</div>
+      <div id="reportsList" class="reports-list"></div>
+    </section>
+    <footer>TraceLab is an educational security demonstrator. Use only with informed, voluntary consent.</footer>
+  </main>
+</body>
+</html>

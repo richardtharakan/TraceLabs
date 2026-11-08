@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.TraceLab" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/tl_background</item>
+        <item name="android:navigationBarColor">@color/tl_background</item>
+        <item name="android:windowBackground">@color/tl_background</item>
+        <item name="colorPrimary">@color/tl_primary</item>
+        <item name="colorSecondary">@color/tl_secondary</item>
+    </style>
+</resources>

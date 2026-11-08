@@ -1,0 +1,8 @@
+<resources>
+    <color name="tl_background">#080E19</color>
+    <color name="tl_surface">#111B2B</color>
+    <color name="tl_text">#F2F6FF</color>
+    <color name="tl_muted">#94A5BF</color>
+    <color name="tl_primary">#82A9FF</color>
+    <color name="tl_secondary">#5CE1E6</color>
+</resources>
