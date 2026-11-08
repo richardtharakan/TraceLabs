@@ -50,3 +50,8 @@ input:focus,select:focus{border-color:#a8f078;box-shadow:0 0 0 3px #a8f07820}
 .share-card>.btn-primary{background:linear-gradient(105deg,#b5f17a,#55d99a);color:#0a140d}
 .share-card .btn-ghost{background:transparent}
 @media(max-width:520px){.share-card .privacy-points{grid-template-columns:1fr}.share-card .privacy-points div{padding:8px 10px}}
+
+
+.share-safety-note{grid-column:1/-1;color:#859a88;font-size:10px;line-height:1.5;margin:1px 0 0}
+.result-actions .btn-primary{font-size:11px;white-space:normal}
+@media(max-width:520px){.result-actions .btn{width:100%}}
