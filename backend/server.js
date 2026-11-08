@@ -79,6 +79,27 @@ function safeEqual(a, b) {
   const right = Buffer.from(String(b));
   return left.length === right.length && timingSafeEqual(left, right);
 }
+function classifyClient(req) {
+  const ua = String(req.get('user-agent') || '');
+  let browser = 'Other/unknown';
+  if (/WhatsApp/i.test(ua)) browser = 'WhatsApp in-app';
+  else if (/Instagram/i.test(ua)) browser = 'Instagram in-app';
+  else if (/Telegram/i.test(ua)) browser = 'Telegram in-app';
+  else if (/FBAN|FBAV|FB_IAB/i.test(ua)) browser = 'Facebook in-app';
+  else if (/Android.*wv/i.test(ua)) browser = 'Android WebView';
+  else if (/EdgA?|EdgiOS/i.test(ua)) browser = 'Edge';
+  else if (/Firefox|FxiOS/i.test(ua)) browser = 'Firefox';
+  else if (/CriOS|Chrome|Chromium/i.test(ua)) browser = 'Chrome/Chromium';
+  else if (/Safari/i.test(ua)) browser = 'Safari';
+
+  let platform = 'Other/unknown';
+  if (/Android/i.test(ua)) platform = 'Android';
+  else if (/iPhone|iPad|iPod/i.test(ua)) platform = 'iOS';
+  else if (/Windows NT/i.test(ua)) platform = 'Windows';
+  else if (/Mac OS X/i.test(ua)) platform = 'macOS';
+  else if (/Linux/i.test(ua)) platform = 'Linux';
+  return { browser, platform };
+}
 function hashToken(token) { return createHash('sha256').update(token).digest('hex'); }
 function getPublicBase(req) {
   return baseUrl || `${req.protocol}://${req.get('host')}`;
@@ -137,7 +158,7 @@ app.post('/api/sessions', adminAuth, creationLimiter, upload.single('image'), as
 app.get('/api/sessions/:token', asyncRoute(async (req, res) => {
   await ensureSchema();
   const result = await pool.query(
-    `SELECT title, image_url, expires_at, (expires_at > NOW()) AS active,
+    `SELECT s.id, title, image_url, expires_at, (expires_at > NOW()) AS active,
             EXISTS (SELECT 1 FROM location_reports r WHERE r.session_id = s.id) AS reported
      FROM sessions s WHERE token_hash = $1`,
     [hashToken(req.params.token)]
@@ -145,12 +166,29 @@ app.get('/api/sessions/:token', asyncRoute(async (req, res) => {
   const session = result.rows[0];
   if (!session) return res.status(404).json({ error: 'This TraceLab link does not exist.' });
   if (!session.active) return res.status(410).json({ error: 'This TraceLab link has expired.' });
+
+  // Record that the consent page loaded. Store only a timestamp and coarse
+  // browser/platform categories; do not persist the IP address or full User-Agent.
+  const client = classifyClient(req);
+  await pool.query(
+    `INSERT INTO session_visits (id, session_id, browser_family, platform_family)
+     VALUES ($1, $2, $3, $4)`,
+    [randomUUID(), session.id, client.browser, client.platform]
+  );
+  const visitResult = await pool.query(
+    `SELECT COUNT(*)::int AS open_count, MAX(opened_at) AS last_opened_at
+     FROM session_visits WHERE session_id = $1`,
+    [session.id]
+  );
+
   res.json({
     title: session.title,
     imageUrl: session.image_url,
     expiresAt: session.expires_at,
     alreadyShared: session.reported,
-    consentVersion: CONSENT_VERSION
+    consentVersion: CONSENT_VERSION,
+    openCount: visitResult.rows[0].open_count,
+    lastOpenedAt: visitResult.rows[0].last_opened_at
   });
 }));
 
@@ -195,9 +233,18 @@ app.get('/api/admin/sessions', adminAuth, asyncRoute(async (req, res) => {
   await ensureSchema();
   const result = await pool.query(
     `SELECT s.id, s.title, s.image_url, s.created_at, s.expires_at,
-            r.latitude, r.longitude, r.accuracy_m, r.consented_at, r.received_at
+            r.latitude, r.longitude, r.accuracy_m, r.consented_at, r.received_at,
+            COALESCE(v.open_count, 0)::int AS open_count,
+            v.last_opened_at, v.last_browser, v.last_platform
      FROM sessions s
      LEFT JOIN location_reports r ON r.session_id = s.id
+     LEFT JOIN LATERAL (
+       SELECT COUNT(*)::int AS open_count,
+              MAX(opened_at) AS last_opened_at,
+              (ARRAY_AGG(browser_family ORDER BY opened_at DESC))[1] AS last_browser,
+              (ARRAY_AGG(platform_family ORDER BY opened_at DESC))[1] AS last_platform
+       FROM session_visits WHERE session_id = s.id
+     ) v ON TRUE
      ORDER BY s.created_at DESC LIMIT 100`
   );
   res.json({ sessions: result.rows });

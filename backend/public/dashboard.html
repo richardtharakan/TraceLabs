@@ -50,7 +50,7 @@
     <section class="workspace-grid">
       <section class="panel create-panel" aria-labelledby="create-title">
         <div class="section-heading">
-          <div><span class="step">02</span><h2 id="create-title">Create a share link</h2></div>
+          <div><span class="step">02</span><h2 id="create-title">Create a photo + caption link</h2></div>
           <span class="pill">24 HOUR DEFAULT</span>
         </div>
         <form id="createForm">
@@ -79,9 +79,9 @@
             <input id="shareUrl" readonly aria-label="Share link">
             <button id="copyBtn" class="btn btn-secondary" type="button">Copy link</button>
           </div>
-          <p class="share-safety-note">On supported phones, this shares a metadata-cleaned photo attachment alongside a separate, clearly labelled consent request. The photo itself does not collect location.</p>
+          <p class="share-safety-note">On supported phones, the selected photo and its TraceLabs caption link are sent together. The caption explains that opening the link records the visit time and coarse browser/device category; GPS is only shared after explicit agreement.</p>
           <div class="result-actions">
-            <button id="shareBtn" class="btn btn-primary" type="button">Share photo + consent request</button>
+            <button id="shareBtn" class="btn btn-primary" type="button">Share photo + caption link</button>
             <a id="openLink" class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer">Preview recipient page ↗</a>
           </div>
         </section>
@@ -106,7 +106,7 @@
         <div><span class="step">04</span><h2 id="reports-title">Responses</h2></div>
         <button id="refreshBtn" class="btn btn-ghost" type="button">↻ Refresh</button>
       </div>
-      <p class="muted reports-intro">A submitted location appears here with its consent time, accuracy and map link.</p>
+      <p class="muted reports-intro">See whether the caption link was opened, the coarse browser/device category, and whether the recipient separately consented to share GPS.</p>
       <div id="reportsState" class="empty-state">Connect to the dashboard to view demonstration responses.</div>
       <div id="reportsList" class="reports-list"></div>
     </section>

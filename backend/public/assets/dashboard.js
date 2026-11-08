@@ -165,9 +165,8 @@ $('shareBtn').addEventListener('click', async () => {
   if (!url) return;
 
   const shareData = {
-    title: 'TraceLabs consent-based location demo',
-    text: 'TraceLabs security-awareness exercise: review this location-sharing request and decide whether you consent. The photo alone does not collect or send location.',
-    url
+    title: 'TraceLabs security-awareness demo',
+    text: `TraceLabs security-awareness demo. Opening this link records the visit time and a coarse browser/device category. GPS location is shared only if you explicitly agree: ${url}`
   };
 
   try {
@@ -182,11 +181,11 @@ $('shareBtn').addEventListener('click', async () => {
       const safePhoto = await createSanitizedPhotoAttachment(selectedPhoto);
       const photoPayload = { ...shareData, files: [safePhoto] };
 
-      // Test the complete payload, not just the file. Some share targets
-      // accept image attachments but silently discard accompanying URLs.
-      if (typeof navigator.canShare === 'function' && navigator.canShare(photoPayload)) {
+      // The URL is embedded in the caption text for better compatibility
+      // with Android share targets such as messaging apps.
+      if (typeof navigator.canShare === 'function' && navigator.canShare({ files: [safePhoto] })) {
         await navigator.share(photoPayload);
-        showStatus($('createStatus'), 'Share menu opened. Before sending, verify that both the photo and the TraceLabs consent link appear in the message. Opening the photo alone does not submit a location.', 'success');
+        showStatus($('createStatus'), 'Share menu opened. Check that the photo and its TraceLabs caption link are both present before sending.', 'success');
         return;
       }
 
@@ -236,7 +235,14 @@ async function loadReports() {
     const state = document.createElement('span');
     state.className = `report-state ${hasLocation ? 'received' : 'pending'}`;
     state.textContent = hasLocation ? 'LOCATION RECEIVED' : 'AWAITING CONSENT';
-    left.append(title, meta, state);
+
+    const visitInfo = document.createElement('div');
+    visitInfo.className = 'report-meta';
+    const openCount = Number(session.open_count || 0);
+    visitInfo.textContent = openCount > 0
+      ? `LINK OPENED ${openCount} time(s) · Latest: ${new Date(session.last_opened_at).toLocaleString()} · ${session.last_browser || 'Browser unknown'} / ${session.last_platform || 'Device unknown'}`
+      : 'LINK NOT OPENED — no consent page visit recorded yet.';
+    left.append(title, meta, visitInfo, state);
 
     if (hasLocation) {
       const coords = document.createElement('div');
