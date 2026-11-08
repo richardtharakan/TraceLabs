@@ -150,7 +150,7 @@ async function createSanitizedPhotoAttachment(file) {
     const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.84));
     if (!blob) throw new Error('Could not encode the photo attachment.');
 
-    const baseName = file.name.replace(/\\.[^.]+$/, '') || 'tracelabs-photo';
+    const baseName = file.name.replace(/\.[^.]+$/, '') || 'tracelabs-photo';
     return new File([blob], `${baseName}.jpg`, {
       type: 'image/jpeg',
       lastModified: Date.now()
